@@ -1,0 +1,100 @@
+Genera un fichero de texto, para ello, puedes ejecutar el siguiente comando:
+
+echo "Este contenido es muy importante y debe protegerse" > mensaje_secreto.txt.
+
+Puedes visualizar el contenido del fichero mensaje_secreto.txt con el comando: cat mensaje_secreto.txt
+
+SOLUCIÓN:
+
+Generamos el fichero mensaje_secreto.txt:
+
+┌──(kali㉿kali)-[~]
+└─$ echo "Este contenido es muy importante y debe protegerse" > mensaje_secreto.txt
+
+
+Visualizamos el contenido del fichero:
+
+┌──(kali㉿kali)-[~]
+└─$ cat mensaje_secreto.txt 
+Este contenido es muy importante y debe protegerse
+   
+
+Supongamos que una persona quiere enviarnos el fichero cifrado anterior utilizando RSA. Para ello, le hemos enviado la clave pública generada en el caso práctico anterior.
+
+Cifra el fichero mensaje_secreto.txt utilizando la clave pública e indica el comando utilizado. (PISTA: Revisa la opción pkeyutl y -encrypt de OpenSSL)
+
+SOLUCIÓN:
+
+Ciframos el fichero mensaje_secreto.txt utilizando OpenSSL. Para ello, podemos ejecutar el siguiente comando utilizando la clave pública generada:
+
+┌──(kali㉿kali)-[~]
+└─$ openssl pkeyutl -encrypt -inkey clave_publica.pem -pubin -in mensaje_secreto.txt -out mensaje_secreto.enc
+
+
+Visualiza el contenido del fichero cifrado. ¿Puedes leer la información?
+
+Convierte el contenido del fichero a hexadecimal y después a bits. ¿Qué longitud tiene el texto cifrado? ¿Por qué?
+
+SOLUCIÓN:
+
+Al intentar visualizar el fichero mensaje_secreto.enc obtenemos el siguiente resultado:
+
+┌──(kali㉿kali)-[~]
+└─$ cat mensaje_secreto.enc
+7����ļ-X��Z���6��:�K��H��hw�gz��P4���o囆
+�z5`�▒��T�0Jy
+$a�E���{���틡�����>R����:%0�(H�.s1f=
+6Q▒p��z��e2���Ͻ�����:"
+�΀?џ`�yvA��,�)�D�       ;�_'R�:�
+                                }#�*;<6����� 9qP��MՄ���n
+*��u����@�k+|ϱZ�4��j|:w���JkE+��
+                                �L���Lg
+
+
+Esto quiere decir que el fichero se encuentra en bytes.
+
+Podemos interpretar el fichero en hexadecimal ejecutando el siguiente comando:
+
+┌──(kali㉿kali)-[~]
+└─$ hexdump -e '16/1 "%02x"' mensaje_secreto.enc 
+37eec5f7f815c4bc2d0016581cbfe2075a92b4cc9ea036f2ad3aa44bc41ceb4892876877db677ada1b831ce9501f341e9da2916f06e59b860ab77a3560dc1ae5c15480304a04790a2461b345cbc514fb7b90a4beed8ba18a9eead6c93e52b0a681fa3a2530f52848901f2e731e3166143d0a365118127001f6d57a10ec10dd653289b2bacfbdd8d519ecc7c33a220a8619ce803fd19f60bc797641f91df42ce829b944148e093bd95f2752eb033a870b7d239f1b622a3b3c36a1c9e819bdda2039715097af4dd584eb1f89f26edb9c040a2aebfd75e2d4c09b409f6b2b7ccfb15aa534c2fa6a7c3a1777858a9b4a6b452b16bd970be64cfff0af4c670d0b783b
+
+
+Si convertimos el contenido del fichero en hexadecimal a binario, y contamos el número de bits, podemos observar que el número total es de 2048 bits.
+
+El motivo por el que el tamaño del texto cifrado es 2048 esta relacionado con el tamaño de clave seleccionada. RSA no puede cifrar texto plano con un tamaño superior al tamaño de clave (en este caso, 2048 bits o 256 bytes) y el resultado que produce siempre será igual al tamaño de clave. Esto evita que un atacante pueda conocer la longitud del texto plano a partir de la del texto cifrado. Sin embargo, limita el uso de RSA para casos de uso en los que se requiera cifrar poca información. Para el resto de casos de uso, debemos recurrir a criptosistemas simétricos.
+
+
+
+Supongamos que nos envían el fichero cifrado. Descifra el mensaje cifrado utilizando la clave privada e indica el comando utilizado. (PISTA: Revisa la opción pkeyutl  y -decrypt)
+
+SOLUCIÓN:
+
+Desciframos el fichero mensaje_secreto.enc utilizando OpenSSL. Para ello, podemos ejecutar el siguiente comando utilizando la clave privada generada:
+
+┌──(kali㉿kali)-[~]
+└─$ openssl pkeyutl -decrypt -inkey clave_privada.pem -in mensaje_secreto.enc -out mensaje_descifrado.txt
+
+
+Visualizamos el contenido del fichero mensaje_descifrado.txt:
+
+┌──(kali㉿kali)-[~]
+└─$ cat mensaje_descifrado.txt
+Este contenido es muy importante y debe protegerse
+
+
+¿Qué ocurre si intentas descifrar el mensaje utilizando la clave pública?
+
+SOLUCIÓN:
+
+Si intentamos descifrar mensaje_secreto.enc utilizando la clave pública obtenemos los siguiente:
+
+┌──(kali㉿kali)-[~]
+└─$ openssl pkeyutl -decrypt -inkey clave_publica.pem -in mensaje_secreto.enc -out mensaje_descifrado.txt
+Could not read private key from clave_publica.pem
+40D76517D67F0000:error:1608010C:STORE routines:ossl_store_handle_load_result:unsupported:../crypto/store/store_result.c:151:
+40D76517D67F0000:error:1608010C:STORE routines:ossl_store_handle_load_result:unsupported:../crypto/store/store_result.c:151:
+pkeyutl: Error initializing context
+
+
+Como era de esperar, no podemos descifrar un mensaje cifrado utilizando la clave pública. Debemos utilizar la clave privada.

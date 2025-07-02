@@ -1,0 +1,54 @@
+En este caso práctico se propone al alumno la implementación de un programa que utilice AES-128 para cifrar y descifrar los mensajes que se muestran a continuación.
+
+Para resolver satisfactoriamente este caso práctico, el alumno deberá completar los siguientes apartados:
+
+Desarrolla un programa en el lenguaje de programación de preferencia que utilice una librería externa que implemente AES. Utiliza AES para cifrar el siguiente mensaje utilizando los siguientes parámetros:
+
+Texto plano: texto secreto
+
+Clave de cifrado: b'A\x83\xbeU\xd7\xa9b\x18\x85AN0\xbft\xc3\xab'
+
+Modo de operación: ECB (PISTA: AES requiere que se le indique un modo de operación (hablaremos de ellos en las siguientes secciones), en el caso de pycryptodome se corresponde con un parámetro al instanciar el algoritmo: AES.MODE_ECB)
+
+
+
+¿Qué ocurre cuando intentas cifrar el texto plano con AES?
+
+¿Qué modificaciones has tenido que hacer sobre el texto plano? (PISTA: Recuerda el concepto de bloque y de padding)
+
+¿Cuál es el texto cifrado resultante?
+
+¿Cuál es el tamaño del texto cifrado resultante?
+
+
+
+Teniendo en cuenta la implementación realizada en el punto anterior, modifica el modo de operación para que utilice CTR (en el caso de pycryptodome AES.MODE_CTR) y elimina el padding del texto plano
+
+
+
+¿Qué ocurre si intentas cifrar el texto plano?
+
+¿Cuál es el tamaño del texto cifrado resultante?
+
+
+
+Si aumentas el tamaño de clave a 256 bits, ¿Qué diferencias hay en el tamaño del texto cifrado entre el modo de operación ECB y CTR?
+
+
+
+Por último, suponemos que el receptor nos ha enviado dos mensajes cifrados con AES-128 con la clave mostrada en el apartado 1 y utilizando el modo ECB y CTR (con el counter en 128), sin embargo, se ha producido un error en la transmisión y se ha modificado 1 byte del texto cifrado. El texto cifrado que hemos recibido es el siguiente:
+
+Texto cifrado 1 (ECB): b'\xd5\x8b\xc2\xd0F\xc0w\xfe\xc1\x12\xaaX\x8f}{)i[\xf1\xc7\x9d\x1d\x08\xcd\xc2\xd8>;\r\xef\xce\xec\x89\xbd\xeb{\xe6mY\xcev\xb9\xdb\x06\x17\xd9\xd6cG6\xb4\xcfN\xf9\x15.\xbe\xed\xe7\xee#\xd0\xd9\x03\xb9l\xbap\x0c\x9c\xbe\xc3\xe1\xae\x86~pk\\\x0f'
+
+Texto cifrado 2 (CTR) (PISTA: Revisa el parámetro counter que presentan las implementaciones de AES en el modo de operación CTR. Ponle el valor 128): b'{\x9a`\x04\x80\xc5\x026D\x1f\xaf\x9c&\xd1\x83\x0c\xf2wL\xd6F}\xd35B.\xb4\xe5\xb1^\x05 P\xc8\xe8\x89\xe1\xf7;G\x13\xf0\xccbs\xe8\x121\x8b4\xbf\xda\x93v\xcb\xe4\xf8g\xe72\xc5~\x97\x01TR\x9d\x0b'
+
+
+
+Descifra el texto cifrado que se ha recibido. 
+
+
+
+¿Cuál es el texto plano resultante?
+
+¿Qué diferencia hay entre un modo de operación y otro respecto a los errores en la transmisión?
+

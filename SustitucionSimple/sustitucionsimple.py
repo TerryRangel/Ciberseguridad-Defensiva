@@ -109,7 +109,7 @@ if __name__ == "__main__":
     trigramas_cifrado.plot(x='letra', y='frecuencia', kind='bar', legend=False)
     plt.title("Frecuencia de trigramas en texto cifrado")
     plt.xlabel("Trigramas")
-    plt.ylabel("Frecuencia")
+    plt.ylabel("Frecuencia") 
     plt.tight_layout()
     plt.show()
 
